@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from sign.models import Event, Guest
 
 
@@ -52,10 +52,23 @@ def search_name(request):
 
 
 @login_required
-def guest_manage(requst):
-    username = requst.session.get('user', '')
+def guest_manage(request):
+    username = request.session.get('user', '')
     guest_list = Guest.objects.all()
-    return render(requst, 'guest_manage.html', {'user': username, 'guests': guest_list})
+
+    # 分页
+    paginator = Paginator(guest_list, 2)
+    page = request.GET.get('page')
+    try:
+        contacts = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        contacts = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        contacts = paginator.page(paginator.num_pages)
+
+    return render(request, 'guest_manage.html', {'user': username, 'guests': contacts})
 
 
 @login_required
@@ -63,4 +76,16 @@ def search_realname(request):
     username = request.session.get('user')
     get_search_name = request.GET.get('name', '')
     guest_list = Guest.objects.filter(realname__contains=get_search_name)
-    return render(request, 'guest_manage.html', {'user': username, 'guests': guest_list})
+    # 分页
+    paginator = Paginator(guest_list, 2)
+    page = request.GET.get('page')
+    try:
+        contacts = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        contacts = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        contacts = paginator.page(paginator.num_pages)
+
+    return render(request, 'guest_manage.html', {'user': username, 'guests': contacts})
