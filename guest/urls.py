@@ -28,6 +28,7 @@ urlpatterns = [
     path('search_name/', views.search_name),  # 搜索功能
     path('guest_manage/', views.guest_manage),  # 嘉宾表单
     path('search_realname/', views.search_realname),  # 嘉宾表单搜索
-    re_path(r'^sign_index/(?P<event_id>[0-9]+)/$', views.sign_index),  #
-    re_path('sign_index_action/(?P<event_id>[0-9]+)/$', views.sign_index_action),  # 嘉宾表单搜索
+    re_path(r'^sign_index/(?P<event_id>[0-9]+)/$', views.sign_index),  # 签到页面
+    re_path('sign_index_action/(?P<event_id>[0-9]+)/$', views.sign_index_action),  # 签到事件
+    path('logout/', views.logout),  # 退出系统
 ]
