@@ -17,4 +17,44 @@
 
 1. 创建发布会和用户模型
 2. 使用 python manage.py migrate 命令生成表
-3. 使用 python mange.py makemigration sign 命令将模型创建成表（数据表迁移，迁移后会在sign/migration目录下生成数据表）
+3. 使用 python mange.py makemigration sign 命令将模型创建成表（数据表迁移，迁移后会在 sign/migration 目录下生成数据表）
+
+---
+
+# 运行测试命令 Run test case
+
+## 运行整个项目内的测试文件
+
+```powershell
+python manage.py test sign
+```
+
+## 运行指定测试文件 tests
+
+```powershell
+python manage.py test sign.tests
+```
+
+## 运行测试类
+
+示例： 运行 tests.py 文件下的 ModeTest 测试类
+
+```powershell
+python manage.py test sign.tests.ModeTest
+```
+
+## 运行测试方法
+
+示例： 运行 tests.py 文件下的 ModeTest 测试类中测试方法 test_event_models
+
+```powershell
+python manage.py test sign.tests.ModeTest.test_event_models
+```
+
+## 模糊匹配测试文件
+
+指定匹配运行的测试文件 ---> test\*.py, 匹配以 “test” 开头， 以“.py” 结尾的测试文件。
+
+```powershell
+python manage.py test -p test*.py
+```
