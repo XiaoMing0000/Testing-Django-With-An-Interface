@@ -1,6 +1,8 @@
 from django.http import JsonResponse
-from sign.models import Event
+from sign.models import Event, Guest
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.db.utils import IntegrityError
+import time
 
 
 # 添加发布会接口
@@ -80,3 +82,54 @@ def get_event_list(request):
             return JsonResponse({'status': 200, 'message': 'success', 'data': datas})
     else:
         return JsonResponse({'status': 10022, 'message': 'query result is empty'})
+
+
+# 添加嘉宾接口
+def add_guest(request):
+    eid = request.POST.get('eid', '')  # 关联发布会 id
+    realname = request.POST.get('realname', '')  # 姓名
+    phone = request.POST.get('phone', '')  # 手机号
+    email = request.POST.get('email', '')  # 邮箱
+
+    if eid == '' or realname == '' or phone == '':
+        return JsonResponse({'status': 10021, 'message': 'parameter error'})
+
+    # 获取发布会信息
+    result = Event.objects.get(id=eid)
+    # 判断发布会 id 是否存在
+    if not result:
+        return JsonResponse({'status': 10022, 'message': 'event id null'})
+
+    # 判断发布会的状态
+    # result = Event.objects.get(id=eid).status
+    # if not result:
+    if not result.status:
+        return JsonResponse({'status': 10023, 'message': 'event status is not available'})
+
+    # event_limit = Event.objects.get(id=eid).limit  # 发布会限制人数
+    event_limit = result.limit  # 发布会限制人数
+    guest_limit = Guest.objects.filter(event_id=eid)  # 发布会已添加的嘉宾数
+
+    # 判断当前发布会的嘉宾数量是否已经满了
+    if len(guest_limit) >= event_limit:
+        return JsonResponse({'status': 10024, 'message': 'event number is full'})
+
+    event_time = Event.objests.get(id=eid).start_time  # 发布会时间
+    event_time = result.start_time  # 发布会时间
+    etime = str(event_time).split('.')[0]
+    time_array = time.strptime(etime, '%Y-%m-%d %H:%M:%S')
+    e_time = int(time.mktime(time_array))
+
+    now_time = str(time.time())  # 当前时间
+    ntime = now_time.split('.')[0]
+    n_time = int(ntime)
+
+    # 判断当前时间是否大于发布会时间
+    if n_time >= e_time:
+        return JsonResponse({'status': 10025, 'message': 'event has started'})
+    try:
+        Guest.objects.create(realname=realname, phone=int(phone), email=email,
+                             sign=0, evnet_id=int(eid))
+    except IntegrityError:
+        return JsonResponse({'status': 10026, 'message': 'the event guest phone number repeat'})
+    return JsonResponse({'status': 200, 'message': 'add guest success'})
