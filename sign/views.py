@@ -51,7 +51,7 @@ def search_name(request):
     return render(request, 'event_manage.html', {'user': username, 'events': event_list})
 
 
-@login_required
+# @login_required
 def guest_manage(request):
     username = request.session.get('user', '')
     guest_list = Guest.objects.all()
@@ -71,11 +71,31 @@ def guest_manage(request):
     return render(request, 'guest_manage.html', {'user': username, 'guests': contacts})
 
 
-@login_required
-def search_realname(request):
+# @login_required
+# def search_realname(request):
+#     username = request.session.get('user')
+#     get_search_name = request.GET.get('name', '')
+#     guest_list = Guest.objects.filter(realname__contains=get_search_name)
+#     # 分页
+#     paginator = Paginator(guest_list, 2)
+#     page = request.GET.get('page')
+#     try:
+#         contacts = paginator.page(page)
+#     except PageNotAnInteger:
+#         # If page is not an integer, deliver first page.
+#         contacts = paginator.page(1)
+#     except EmptyPage:
+#         # If page is out of range (e.g. 9999), deliver last page of results.
+#         contacts = paginator.page(paginator.num_pages)
+#
+#     return render(request, 'guest_manage.html', {'user': username, 'guests': contacts})
+
+
+# @login_required
+def search_phone(request):
     username = request.session.get('user')
     get_search_name = request.GET.get('name', '')
-    guest_list = Guest.objects.filter(realname__contains=get_search_name)
+    guest_list = Guest.objects.filter(phone__contains=get_search_name)
     # 分页
     paginator = Paginator(guest_list, 2)
     page = request.GET.get('page')
