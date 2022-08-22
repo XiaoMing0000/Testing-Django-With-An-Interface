@@ -34,7 +34,7 @@ def login_action(request):
 # xiaoming0001          gongshengnan01
 
 # 发布会管理
-@login_required  # 显示某个试图函数必须登录才能访问
+# @login_required  # 显示某个试图函数必须登录才能访问
 def event_manage(request):
     # username = request.COOKIES.get('user', '')          # 读取浏览器 cookie
     event_list = Event.objects.all()
@@ -43,7 +43,7 @@ def event_manage(request):
 
 
 # 发布会名称搜索
-@login_required
+# @login_required
 def search_name(request):
     username = request.session.get('user', '')
     get_search_name = request.GET.get("name", "")
