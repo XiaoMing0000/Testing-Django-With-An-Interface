@@ -115,3 +115,45 @@ class GuestManageTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'alen', response.content)
         self.assertIn(b'19611001100', response.content)
+
+
+# 发布会签到 Test User Sign
+class SignIndexActionTest(TestCase):
+    ''' 发布会签到 '''
+
+    def setUp(self):
+        # 创建发布会
+        Event.objects.create(id=1, name='xiaomi5', limit=2000, address='beijing',
+                             status=1, start_time='2023-8-10 12:30:00')
+        Event.objects.create(id=2, name='oneplus4', limit=2000, address='shenzhen',
+                             status=1, start_time='2023-6-10 12:30:00')
+        # 创建嘉宾
+        Guest.objects.create(realname='alen', phone=18611001100,
+                             email='alen@mail.com', sign=0, event_id=1)
+        Guest.objects.create(realname='una', phone=18611001101,
+                             email='una@mail.com', sign=1, event_id=2)
+        self.c = Client()
+
+    def test_sign_index_action_phone_null(self):
+        ''' 手机号为空 '''
+        response = self.c.post('/sign_index_action/1/', {'phone': ''})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'phone error', response.content)
+
+    def test_sign_index_action_phone_of_event_id_error(self):
+        ''' 手机号或发布会 id 错误'''
+        response = self.c.post('/sign_index_action/2/', {'phone': '18611001100'})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'event id or phone error.', response.content)
+
+    def test_sign_index_action_user_sign_has(self):
+        ''' 用户已签到 '''
+        response = self.c.post('/sign_index_action/2/', {'phone': '18611001101'})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'user has sign in.', response.content)
+
+    def test_sign_index_action_user_sign_success(self):
+        ''' 签到成功 '''
+        response = self.c.post('/sign_index_action/1/', {'phone': '18611001100'})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'sign in success!', response.content)

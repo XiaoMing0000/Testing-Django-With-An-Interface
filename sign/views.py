@@ -119,7 +119,7 @@ def sign_index(request, event_id):
 
 
 # 签到动作
-@login_required
+# @login_required
 def sign_index_action(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     phone = request.POST.get('phone', '')
