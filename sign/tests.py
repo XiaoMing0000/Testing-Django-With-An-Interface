@@ -67,7 +67,7 @@ class LoginActionTest(TestCase):
         self.assertEqual(response.status_code, 302)
 
 
-# 发布会管理
+# 发布会管理  Test Guest Manage
 class EventManageTest(TestCase):
     ''' 发布会关闭 '''
 
@@ -89,3 +89,29 @@ class EventManageTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'xiaomi5', response.content)
         self.assertIn(b'beijing', response.content)
+
+
+# 嘉宾测试 Test Guest Manage
+class GuestManageTest(TestCase):
+    ''' 嘉宾管理 '''
+
+    def setUp(self):
+        Event.objects.create(id=1, name='xiaomi2', limit=2000,
+                             address='beijing', status=1, start_time=datetime(2023, 8, 10, 14, 0, 0))
+        Guest.objects.create(realname='alen', phone=19611001100,
+                             email='alen@mail.con', sign=0, event_id=1)
+        self.c = Client()
+
+    def test_event_manage_success(self):
+        ''' 测试嘉宾信息'''
+        response = self.c.post('/guest_manage/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'alen', response.content)
+        self.assertIn(b'19611001100', response.content)
+
+    def test_guest_manage_search_success(self):
+        ''' 测试嘉宾搜索'''
+        response = self.c.post('/search_phone/', {'phone': '18611001100'})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'alen', response.content)
+        self.assertIn(b'19611001100', response.content)
