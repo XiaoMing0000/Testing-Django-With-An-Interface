@@ -160,7 +160,7 @@ def get_guest_list(request):
     if eid != '' and phone != '':
         guest = {}
         try:
-            results = Guest.objects.filter(phone=phone, event_id=eid)
+            results = Guest.objects.get(phone=phone, event_id=eid)
         except ObjectDoesNotExist:
             return JsonResponse({'status': 10022, 'message': 'query result is empty'})
         else:
