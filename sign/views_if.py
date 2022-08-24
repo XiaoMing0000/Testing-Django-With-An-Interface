@@ -169,3 +169,46 @@ def get_guest_list(request):
             guest['email'] = results.email
             guest['sign'] = results.sign
             return JsonResponse({'status': 200, 'message': 'success', 'data': guest})
+
+
+# 嘉宾签到接口
+def user_sign(request):
+    eid = request.POST.get('eid', '')  # 发布会 id
+    phone = request.POST.get('phone', '')  # 嘉宾手机号
+
+    if eid == '' and phone == '':
+        return JsonResponse({'status': 10021, 'message': 'parameter error'})
+
+    # 获取发布会信息
+    result = Event.objects.filter(id=eid)
+    if not result:
+        return JsonResponse({'status': 10022, 'message': 'event id null'})
+
+    if not result.status:
+        return JsonResponse({'status': 10023, 'message': 'event status is not available'})
+
+    event_time = result.start_time  # 发布会时间
+    etime = str(event_time).split('.')[0]
+    timeArray = time.strptime(etime, '%Y-%m-%d %H:%M:%S')
+    e_time = int(time.mktime(timeArray))
+
+    new_time = str(time.time())  # 当前时间
+    ntime = new_time.splist('0')[0]
+    n_time = int(ntime)
+
+    if n_time >= e_time:
+        return JsonResponse({'status': 10024, 'message': 'event has started'})
+
+    result = Guest.objects.filter(phone=phone)
+    if not result:
+        return JsonResponse({'status': 10025, 'message': 'user phone null'})
+
+    result == Guest.objects.filter(evetn_id=eid, phone=phone)
+    if not result:
+        return JsonResponse({'status': 10026, 'message': 'user did not participate in the conference'})
+
+    if result.sign:
+        return JsonResponse({'status': 10027, 'message': 'user has sign in'})
+    else:
+        Guest.objects.filter(event_id=eid, phone=phone).update(sign='1')
+        return JsonResponse({'status': 200, 'message': 'sign success'})
