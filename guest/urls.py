@@ -16,7 +16,7 @@ Including another URLconf
 from django.urls import include, re_path
 from django.contrib import admin
 from django.urls import path
-from sign import views
+from sign import views, views_if
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,4 +31,20 @@ urlpatterns = [
     re_path(r'^sign_index/(?P<event_id>[0-9]+)/$', views.sign_index),  # 签到页面
     re_path('sign_index_action/(?P<event_id>[0-9]+)/$', views.sign_index_action),  # 签到事件
     path('logout/', views.logout),  # 退出系统
+
+    # 配置接口路径，当所有接口都已经开发完成，需要配置接口的访问路径
+    re_path(r'^api', include('sign.urls', namespace='sign')),
+
+    # 添加接口
+    # guest system interface:
+    # ex: /api/add_event/
+    re_path(r'^/add_event/', views_if.add_evnet, name='add_event'),
+    # ex: /api/add_guest/
+    re_path(r'^/add_guest/', views_if.add_guest, name='add_guest'),
+    # ex: /api/get_evnet_list/
+    re_path(r'^/get_event_list/', views_if.get_evnet_list, name='get_evnet_list'),
+    # ex: /api/get_guest_list/
+    re_path(r'^/get_guest_list/', views_if.get_guest_list, name='get_guest_list'),
+    # ex: /api/user_sign/
+    re_path(r'^/user_sign/', views_if.user_sign, name='user_sign'),
 ]
