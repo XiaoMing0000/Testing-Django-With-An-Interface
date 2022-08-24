@@ -133,3 +133,39 @@ def add_guest(request):
     except IntegrityError:
         return JsonResponse({'status': 10026, 'message': 'the event guest phone number repeat'})
     return JsonResponse({'status': 200, 'message': 'add guest success'})
+
+
+# 嘉宾查询接口
+def get_guest_list(request):
+    eid = request.GET.get('eid', '')  # 关联发布会id
+    phone = request.GET.get('phone', '')  # 嘉宾手机号
+
+    if eid == '':
+        return JsonResponse({'status': 10021, 'message': 'eid cannot be empty'})
+    if eid != '' and phone == '':
+        datas = []
+        results = Guest.objects.filter(evnet_id=eid)
+        if results:
+            guest = {}
+            for r in results:
+                guest['realname'] = r.realname
+                guest['phone'] = r.phone
+                guest['email'] = r.email
+                guest['sign'] = r.sign
+                datas.append(guest)
+            return JsonResponse({'status': 200, 'message': 'success', 'data': datas})
+        else:
+            return JsonResponse({'status': 10022, 'message': 'query result is empty'})
+
+    if eid != '' and phone != '':
+        guest = {}
+        try:
+            results = Guest.objects.filter(phone=phone, event_id=eid)
+        except ObjectDoesNotExist:
+            return JsonResponse({'status': 10022, 'message': 'query result is empty'})
+        else:
+            guest['realname'] = results.realname
+            guest['phone'] = results.phone
+            guest['email'] = results.email
+            guest['sign'] = results.sign
+            return JsonResponse({'status': 200, 'message': 'success', 'data': guest})
