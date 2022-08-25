@@ -58,3 +58,18 @@ python manage.py test sign.tests.ModeTest.test_event_models
 ```powershell
 python manage.py test -p test*.py
 ```
+
+# Robot Framework 测试框架
+
+## 环境搭建
+
+1. 安装 python 依赖 robotframework、requests 和 robotframework-requests 依赖
+
+   ```powershell
+   pip install robotframework
+   pip install requests
+   pip install robotframework-requests
+   ```
+
+2. 添加 robot 的环境变量
+   将 python 安装包下的 Scripts 文件夹的据对路径添加到 用户或系统 Path 内<br>我的 Scripts 路径 ：D:\Program Files\Python\Python38\Scripts
