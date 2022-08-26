@@ -9,7 +9,7 @@ from datetime import datetime
 # Create your tests here.
 class ModelTest(TestCase):
     def setUp(self):
-        Event.objects.create(id=1, name='oneplus 3 event', status=True, limit=2000,
+        Event.objects.create(id=1, name='oneplus 3 event', status=True, maximum=2000,
                              address='shenzhen', start_time='2022-08-31 12:00:00')
         Guest.objects.create(id=1, event_id=1, realname='alen',
                              phone='13711001101', email='alen@mail.com', sign=False)
@@ -72,7 +72,7 @@ class EventManageTest(TestCase):
     ''' 发布会关闭 '''
 
     def setUp(self):
-        Event.objects.create(id=2, name='xiaomi5', limit=2000, status=True,
+        Event.objects.create(id=2, name='xiaomi5', maximum=2000, status=True,
                              address='beijing', start_time=datetime(2035, 8, 10, 16, 0, 0))
         self.c = Client()
 
@@ -96,7 +96,7 @@ class GuestManageTest(TestCase):
     ''' 嘉宾管理 '''
 
     def setUp(self):
-        Event.objects.create(id=1, name='xiaomi2', limit=2000,
+        Event.objects.create(id=1, name='xiaomi2', maximum=2000,
                              address='beijing', status=1, start_time=datetime(2023, 8, 10, 14, 0, 0))
         Guest.objects.create(realname='alen', phone=19611001100,
                              email='alen@mail.con', sign=0, event_id=1)
@@ -123,9 +123,9 @@ class SignIndexActionTest(TestCase):
 
     def setUp(self):
         # 创建发布会
-        Event.objects.create(id=1, name='xiaomi5', limit=2000, address='beijing',
+        Event.objects.create(id=1, name='xiaomi5', maximum=2000, address='beijing',
                              status=1, start_time='2023-8-10 12:30:00')
-        Event.objects.create(id=2, name='oneplus4', limit=2000, address='shenzhen',
+        Event.objects.create(id=2, name='oneplus4', maximum=2000, address='shenzhen',
                              status=1, start_time='2023-6-10 12:30:00')
         # 创建嘉宾
         Guest.objects.create(realname='alen', phone=18611001100,
@@ -142,18 +142,21 @@ class SignIndexActionTest(TestCase):
 
     def test_sign_index_action_phone_of_event_id_error(self):
         ''' 手机号或发布会 id 错误'''
-        response = self.c.post('/sign_index_action/2/', {'phone': '18611001100'})
+        response = self.c.post('/sign_index_action/2/',
+                               {'phone': '18611001100'})
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'event id or phone error.', response.content)
 
     def test_sign_index_action_user_sign_has(self):
         ''' 用户已签到 '''
-        response = self.c.post('/sign_index_action/2/', {'phone': '18611001101'})
+        response = self.c.post('/sign_index_action/2/',
+                               {'phone': '18611001101'})
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'user has sign in.', response.content)
 
     def test_sign_index_action_user_sign_success(self):
         ''' 签到成功 '''
-        response = self.c.post('/sign_index_action/1/', {'phone': '18611001100'})
+        response = self.c.post('/sign_index_action/1/',
+                               {'phone': '18611001100'})
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'sign in success!', response.content)

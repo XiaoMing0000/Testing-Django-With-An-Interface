@@ -5,7 +5,7 @@ from django.db import models
 # 创建发布会表
 class Event(models.Model):
     name = models.CharField(max_length=100)  # 发布会标题
-    limit = models.IntegerField()  # 参加人数
+    maximum = models.IntegerField()  # 参加人数
     status = models.BooleanField()  # 状态
     address = models.CharField(max_length=200)  # 地址
     start_time = models.DateTimeField('events time')  # 发布会地址

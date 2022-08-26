@@ -15,9 +15,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Event',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100)),
-                ('limit', models.IntegerField()),
+                ('maximum', models.IntegerField()),
                 ('status', models.BooleanField()),
                 ('address', models.CharField(max_length=200)),
                 ('start_time', models.DateTimeField(verbose_name='events time')),
@@ -27,13 +28,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Guest',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('realname', models.CharField(max_length=64)),
                 ('phone', models.CharField(max_length=16)),
                 ('email', models.EmailField(max_length=254)),
                 ('sign', models.BooleanField()),
                 ('create_time', models.DateTimeField(auto_now=True)),
-                ('event', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='sign.event')),
+                ('event', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='sign.event')),
             ],
         ),
     ]

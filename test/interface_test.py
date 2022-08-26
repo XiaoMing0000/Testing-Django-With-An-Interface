@@ -24,7 +24,7 @@ class GetEventListTest(unittest.TestCase):
         self.assertEqual(result['status'], 200)
         self.assertEqual(result['message'], 'success')
         self.assertEqual(result['data']['name'], '中国中心发布会')
-        self.assertEqual(result['data']['limit'], 10000)
+        self.assertEqual(result['data']['maximum'], 10000)
         self.assertEqual(result['data']['status'], True)
         self.assertEqual(result['data']['address'], '中国中心')
         self.assertEqual(result['data']['start_time'], '2022-07-26T02:42:48')

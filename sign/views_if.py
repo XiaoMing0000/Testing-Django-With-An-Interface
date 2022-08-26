@@ -9,13 +9,13 @@ import time
 def add_evnet(request):
     eid = request.POST.get('eid', '')  # 发布会id
     name = request.POST.get('name', '')  # 发布会标题
-    limit = request.POST.get('limit', '')  # 限制人数
+    maximum = request.POST.get('maximum', '')  # 限制人数
     status = request.POST.get('status', '')  # 状态
     address = request.POST.get('address', '')  # 地址
     start_time = request.POST.get('start_time', '')  # 发布会时间
 
     # 判断用户信息是否为空
-    if eid == '' or name == '' or limit == '' or address == '' or start_time == '':
+    if eid == '' or name == '' or maximum == '' or address == '' or start_time == '':
         return JsonResponse({'status': 10021, 'message': 'parameter error'})
 
     # 判断会议 ID 是否已经存在
@@ -34,7 +34,7 @@ def add_evnet(request):
 
     try:
         # 创建发布会
-        Event.objects.create(id=eid, name=name, limit=limit, address=address,
+        Event.objects.create(id=eid, name=name, maximum=maximum, address=address,
                              status=int(status), start_time=start_time)
     except ValidationError as e:
         # 如果验证错误返回提示格式信息
@@ -60,7 +60,7 @@ def get_event_list(request):
             return JsonResponse({'status': 10022, 'message': 'query result is empty'})
         else:
             event['name'] = result.name
-            event['limit'] = result.limit
+            event['maximum'] = result.maximum
             event['status'] = result.status
             event['address'] = result.address
             event['start_time'] = result.start_time
@@ -74,7 +74,7 @@ def get_event_list(request):
         if results:
             for r in results:
                 event['name'] = r.name
-                event['limit'] = r.limit
+                event['maximum'] = r.maximum
                 event['status'] = r.status
                 event['address']: r.address
                 event['start_time'] = r.start_time
@@ -106,12 +106,12 @@ def add_guest(request):
     if not result.status:
         return JsonResponse({'status': 10023, 'message': 'event status is not available'})
 
-    # event_limit = Event.objects.get(id=eid).limit  # 发布会限制人数
-    event_limit = result.limit  # 发布会限制人数
-    guest_limit = Guest.objects.filter(event_id=eid)  # 发布会已添加的嘉宾数
+    # event_maximum = Event.objects.get(id=eid).maximum  # 发布会限制人数
+    event_maximum = result.maximum  # 发布会限制人数
+    guest_maximum = Guest.objects.filter(event_id=eid)  # 发布会已添加的嘉宾数
 
     # 判断当前发布会的嘉宾数量是否已经满了
-    if len(guest_limit) >= event_limit:
+    if len(guest_maximum) >= event_maximum:
         return JsonResponse({'status': 10024, 'message': 'event number is full'})
 
     event_time = Event.objests.get(id=eid).start_time  # 发布会时间
