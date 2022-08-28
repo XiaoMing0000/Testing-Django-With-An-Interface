@@ -44,13 +44,12 @@ class DB:
     def insert(self, table_name, table_data):
         for key in table_data:
             table_data[key] = '"' + str(table_data[key]) + '"'
-            print(table_data[key])
         key = ','.join(table_data.keys())
         value = ','.join(table_data.values())
         real_sql = 'INSERT INTO ' + table_name + ' (' + key + ') VALUES (' + value + ')'
-        print(real_sql)
         # print(real_sql)
         with self.connection.cursor() as cursor:
+            # print(real_sql)
             cursor.execute(real_sql)
 
         self.connection.commit()

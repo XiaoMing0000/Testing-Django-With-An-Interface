@@ -39,7 +39,7 @@ def add_evnet(request):
     except ValidationError as e:
         # 如果验证错误返回提示格式信息
         error = 'start_time format error. It must be in YYYY-MM-DD HH:MM:SS format.'
-        return JsonResponse({'status': 200, 'message': error})
+        return JsonResponse({'status': 10024, 'message': error})
     return JsonResponse({'status': 200, 'message': 'add event success'})
 
 
