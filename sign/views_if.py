@@ -47,7 +47,7 @@ def add_evnet(request):
 def get_event_list(request):
     eid = request.GET.get('eid', '')  # 发布会 id
     name = request.GET.get('name', '')  # 发布会名称
-
+    
     if eid == '' and name == '':
         return JsonResponse({'status': 10021, 'message': 'parameter error'})
 

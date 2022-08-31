@@ -35,7 +35,4 @@ urlpatterns = [
     # 配置接口路径，当所有接口都已经开发完成，需要配置接口的访问路径
     re_path(r'^api/', include('sign.urls', namespace="sign")),
 
-    # 增加发布会接口安全接口指向
-    re_path(r'^sec_get_event_list/', views_if_sec.get_event_list, name='get_event_list')
-
 ]
