@@ -11,7 +11,9 @@ def user_auth(request):
     get_http_aut = request.META.get('HTTP_AUTHORIZATION', b'')
     auth = get_http_aut.split()
     try:
-        auth_parts = base64.b64decode(auth[1].decode('iso-8859-1')).partition(':')
+        code = str(auth[1])
+        auth_parts = base64.b64decode(code)
+        auth_parts = auth_parts.decode('iso-8859-1').partition(':')
     except IndexError:
         return 'null'
     userid, password = auth_parts[0], auth_parts[2]
@@ -29,7 +31,7 @@ def get_event_list(request):
     auth_result = user_auth(request)
     if auth_result == 'null':
         return JsonResponse({'status': 10011, 'message': 'user auth null'})
-    if auth_result == 'fait':
+    if auth_result == 'fail':
         return JsonResponse({'status': 10012, 'message': 'user auth fail'})
 
     eid = request.GET.get('eid', '')  # 发布会 id
