@@ -23,8 +23,8 @@ def user_sign(request):
 
     # 签名检查
     md5 = hashlib.md5()
-    sign_str = client_time + '@Guest-Bugmaster'
-    sign_bytes_utf8 = sign_str.encode(encodings='utf-8')
+    sign_str = client_time + '&Guest-Bugmaster'
+    sign_bytes_utf8 = sign_str.encode(encoding='utf-8')
     md5.update(sign_bytes_utf8)
     server_sign = md5.hexdigest()
     if server_sign != client_sign:
@@ -85,5 +85,6 @@ if __name__ == '__main__':
     print('当前时间戳：' + str(now_time))
 
     # 转换成日期格式
-    otherStyleTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now_time))
+    otherStyleTime = time.strftime(
+        '%Y-%m-%d %H:%M:%S', time.localtime(now_time))
     print('日期格式：' + str(otherStyleTime))
