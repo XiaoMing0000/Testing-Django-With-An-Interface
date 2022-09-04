@@ -12,6 +12,7 @@ class GetEventListTest(unittest.TestCase):
     def test_get_event_list_null(self):
         ''' auth 为空 '''
         r = requests.get(self.base_url, params={'eid': ''})
+        result = r.json()
         self.assertEqual(result['status'], 10011)
         self.assertEqual(result['message'], 'user auth null')
 
@@ -31,7 +32,8 @@ class GetEventListTest(unittest.TestCase):
 
     def test_guest_event_list_eid_success(self):
         ''' eid 为空'''
-        r = requests.get(self.base_url, auth=self.auth_user, params={'eid': '1'})
+        r = requests.get(self.base_url, auth=self.auth_user,
+                         params={'eid': '1'})
         result = r.json()
         self.assertEqual(result['status'], 200)
         self.assertEqual(result['data']['name'], '红米 Pro 发布会')

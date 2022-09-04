@@ -1,5 +1,5 @@
 from django.urls import include, re_path
-from sign import views, views_if, views_if_sec
+from sign import views, views_if, views_if_sec, views_if_security
 from django.urls import path
 
 app_name = 'sign'
@@ -20,4 +20,8 @@ urlpatterns = [
 
     # ex: /api/sec_get_evnet_list/
     path('sec_get_event_list/', views_if_sec.get_event_list),  # 嘉宾表单搜索
+
+    # security interface
+    # ex: /api/sec_add_event
+    path('sec_add_event/', views_if_security.add_event),
 ]
